@@ -3,13 +3,15 @@
 $keyvaultname = "xxxxx"
 $location = "xxxxx"
 $keyvaultrg = "xxxxxx"
-$sshkeysecret = "xxxxx"
-$spnclientid = "xxxxxx"
-$clientidkvsecretname = "xxxxxx"
-$spnclientsecret = "xxxxxx"
-$spnkvsecretname = "xxxxx"
-$spobjectID = "xxxxx"
-$userobjectid = "xxxxx"
+
+$sshkeysecret = "xxxxx" # e.g. ekspublickey
+
+$spnclientid = "xxxxxx" # service principle's client ID
+$clientidkvsecretname = "xxxxxx" # e.g. spn-id
+$spnclientsecret = "xxxxxx" # generated client secret of the service principle, usually should not store in the repo
+$spnkvsecretname = "xxxxx" # e.g. spn-secret
+$spobjectID = "xxxxx" # service principle's Object ID
+$userobjectid = "xxxxx" # same service principle's Object ID
 
 
 #### Create Key Vault
