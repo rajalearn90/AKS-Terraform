@@ -1,0 +1,41 @@
+#### Parameters
+
+$keyvaultname = "aviva-akscluster-kv"
+$location = "East US"
+$keyvaultrg = "RG_AvivaProj1"
+$sshkeysecret = "ekssshpubkey"                    # Secret name to store SSH public key
+$spnclientid = "1e31b4c6-d9cf-401a-9937-777c308e9735" # SPN Client ID (Application ID)
+$clientidkvsecretname = "spn-id"                  # Secret name to store SPN Client ID
+$spnclientsecret = "xxxxxx"                       # SPN Client Secret (⚠️ DO NOT store in plaintext in real scripts!)
+$spnkvsecretname = "spn-secret"                   # Secret name to store SPN Client Secret
+$spobjectID = "bc35ed36-da42-4065-9178-6d3206f96c8a" # SPN Object ID (from AAD)
+$userobjectid = "bc35ed36-da42-4065-9178-6d3206f96c8a" # Same as above if you're using SPN
+
+#### Create Resource Group (Uncomment if needed)
+# New-AzResourceGroup -Name $keyvaultrg -Location $location
+
+#### Create Key Vault
+New-AzKeyVault -Name $keyvaultname -ResourceGroupName $keyvaultrg -Location $location
+
+# Assign access policy to Service Principal
+Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $userobjectid -PermissionsToSecrets get,set,delete,list
+# Wrong: Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -UserPrincipalName $userobjectid -PermissionsToSecrets get,set,delete,list
+
+#### Create an SSH key for password-less login between agent nodes
+ssh-keygen -f ~/.ssh/id_rsa_terraform
+
+#### Add SSH Public Key to Azure Key Vault as secret
+$pubkey = Get-Content ~/.ssh/id_rsa_terraform.pub -Raw
+$Secret = ConvertTo-SecureString -String $pubkey -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $sshkeysecret -SecretValue $Secret
+
+#### Store SPN Client ID in Azure Key Vault
+$Secret = ConvertTo-SecureString -String $spnclientid -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $clientidkvsecretname -SecretValue $Secret
+
+#### Store SPN Client Secret in Azure Key Vault
+$Secret = ConvertTo-SecureString -String $spnclientsecret -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $spnkvsecretname -SecretValue $Secret
+
+#### Provide Key Vault secret access to SPN using Key Vault access policy
+Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $spobjectID -PermissionsToSecrets get,set
