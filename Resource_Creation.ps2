@@ -1,8 +1,8 @@
 #### Parameters
+$keyvaultrg = "RG_AvivaProj1"
 
 $keyvaultname = "aviva-akscluster-kv"
 $location = "East US"
-$keyvaultrg = "RG_AvivaProj1"
 $sshkeysecret = "ekssshpubkey"                    # Secret name to store SSH public key
 $spnclientid = "1e31b4c6-d9cf-401a-9937-777c308e9735" # SPN Client ID (Application ID)
 $clientidkvsecretname = "spn-id"                  # Secret name to store SPN Client ID
@@ -10,6 +10,26 @@ $spnclientsecret = "xxxxxx"                       # SPN Client Secret (⚠️ DO
 $spnkvsecretname = "spn-secret"                   # Secret name to store SPN Client Secret
 $spobjectID = "bc35ed36-da42-4065-9178-6d3206f96c8a" # SPN Object ID (from AAD)
 $userobjectid = "bc35ed36-da42-4065-9178-6d3206f96c8a" # Same as above if you're using SPN
+
+#New-AzResourceGroup -Name $keyvaultrg -Location $location
+
+New-AzKeyVault -Name $keyvaultname -ResourceGroupName $keyvaultrg -Location $location
+Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $userobjectid -PermissionsToSecrets get,set,delete,list
+
+ssh-keygen -f $env:USERPROFILE\.ssh\id_rsa_terraform
+
+$pubkey = Get-Content "$env:USERPROFILE\.ssh\id_rsa_terraform.pub" -Raw
+$sshSecret = ConvertTo-SecureString -String $pubkey -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $sshkeysecret -SecretValue $sshSecret
+
+$clientIdSecret = ConvertTo-SecureString -String $spnclientid -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $clientidkvsecretname -SecretValue $clientIdSecret
+
+$spnSecret = ConvertTo-SecureString -String $spnclientsecret -AsPlainText -Force
+Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $spnkvsecretname -SecretValue $spnSecret
+
+Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $spobjectID -PermissionsToSecrets Get,Set
+#########################################################################################
 
 #### Create Resource Group (Uncomment if needed)
 # New-AzResourceGroup -Name $keyvaultrg -Location $location
