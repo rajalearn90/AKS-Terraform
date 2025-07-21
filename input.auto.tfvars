@@ -12,7 +12,7 @@ subnetcidr = ["10.0.0.0/25"]
 
 keyvault_rg = "RG_AvivaProj1"
 
-keyvault_name = "AvivaRaja-kv"
+keyvault_name = "AvivaKeyVault"
 
 azure_region = "East US"
 
