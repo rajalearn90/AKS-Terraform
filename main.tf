@@ -17,6 +17,11 @@ data "azurerm_key_vault_secret" "spn_secret" {
   key_vault_id = data.azurerm_key_vault.azure_vault.id
 }
 
+data "azurerm_resource_group" "aks_rg" {
+  name     = var.resource_group
+  location = var.azure_region
+}
+
 resource "azurerm_virtual_network" "aks_vnet" {
   name                = var.aks_vnet_name
   resource_group_name = azurerm_resource_group.aks_rg.name
@@ -31,11 +36,6 @@ resource "azurerm_subnet" "aks_subnet" {
   address_prefixes       = var.subnetcidr
 }
 
-
-resource "azurerm_resource_group" "aks_rg" {
-  name     = var.resource_group
-  location = var.azure_region
-}
 
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                = var.cluster_name
@@ -58,9 +58,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     }
   }
 
-  role_based_access_control {
-    enabled = true
-  }
+  role_based_access_control_enabled = true
 
   service_principal {
     client_id     = data.azurerm_key_vault_secret.spn_id.value
