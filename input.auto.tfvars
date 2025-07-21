@@ -1,22 +1,22 @@
 aks_vnet_name = "aksvnet"
 
-sshkvsecret = "akssshpubkey"
+sshkvsecret = "sshkeysecret"
 
-clientidkvsecret = "spn-id"
+clientidkvsecret = "spClientId"
 
-spnkvsecret = "spn-secret"
+spnkvsecret = "spSecret"
 
 vnetcidr = ["10.0.0.0/24"]
 
 subnetcidr = ["10.0.0.0/25"]
 
-keyvault_rg = "aksdemo-rg"
+keyvault_rg = "RG_AvivaProj1"
 
-keyvault_name = "aksdemocluster-kv"
+keyvault_name = "AvivaRaja-kv1"
 
-azure_region = "australiaeast"
+azure_region = "East US"
 
-resource_group = "aksdemocluster-rg"
+resource_group = "RG_AvivaProj1"
 
 cluster_name = "aksdemocluster"
 
@@ -24,7 +24,7 @@ dns_name = "aksdemocluster"
 
 admin_username = "aksuser"
 
-kubernetes_version = "1.21.7"
+kubernetes_version = "1.33.3"
 
 agent_pools = {
       name            = "pool1"
