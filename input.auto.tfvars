@@ -2,7 +2,7 @@ aks_vnet_name = "aksvnet"
 
 sshkvsecret = "kvsshkey"
 
-clientidkvsecret = "spClientId"
+clientidkvsecret = "kvspClientId"
 
 spnkvsecret = "kvspSecret"
 
@@ -12,7 +12,7 @@ subnetcidr = ["10.0.0.0/25"]
 
 keyvault_rg = "RG_AvivaProj1"
 
-keyvault_name = "AvivaKeyVault"
+keyvault_name = "AvivaKeyVault1"
 
 azure_region = "East US"
 
