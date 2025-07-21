@@ -1,12 +1,12 @@
 $keyvaultrg = "RG_AvivaProj1"
 $location = "East US"
 
-$keyvaultname = "AvivaRaja-kv1"
-$spnobjectID = "bc35ed36-da42-4065-9178-6d3206f96c8a" # SPN Object ID (from AAD)
+$keyvaultname = "AvivaKeyVault1"
+$spnobjectID = "5045307d-c41e-4a34-877f-3311c350afae" # SPN Object ID (from AAD)
 
-$sshkeysecret = "sshkeysecret"       # Secret NAME to store SSH public key
-$spClientId = "spClientId"               # Secret name to store SPN Client ID
-$spnkvsecretname = "spSecret"        # Secret name to store SPN Client Secret
+$sshkeysecret = "kvsshkey"       # Secret NAME to store SSH public key
+$spClientId = "kvspClientId"               # Secret name to store SPN Client ID
+$spnkvsecretname = "kvspSecret"        # Secret name to store SPN Client Secret
 
 $spnclientid = "1e31b4c6-d9cf-401a-9937-777c308e9735" # SPN Client ID (⚠️ Do not store in the Repo)
 $spnclientsecret = "xxxxxx" # SPN Client Secret (⚠️ DO NOT store in plaintext in real scripts!)
@@ -17,9 +17,11 @@ $spnclientsecret = "xxxxxx" # SPN Client Secret (⚠️ DO NOT store in plaintex
 
 #### Create Key Vault
 New-AzKeyVault -Name $keyvaultname -ResourceGroupName $keyvaultrg -Location $location
+New-AzKeyVault -Name AvivaKeyVault1 -ResourceGroupName RG_AvivaProj1 -Location "East US"
 
 ### Assign access policy to Service Principal
 Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $spnobjectID -PermissionsToSecrets get,set,delete,list
+Set-AzKeyVaultAccessPolicy -VaultName AvivaKeyVault1 -ObjectId '5045307d-c41e-4a34-877f-3311c350afae' -PermissionsToSecrets get,set,delete,list
 
 #### Create an SSH key for password-less login between agent nodes
 ssh-keygen -f ~/.ssh/id_rsa_terraform
@@ -28,14 +30,17 @@ ssh-keygen -f ~/.ssh/id_rsa_terraform
 $pubkey = Get-Content ~/.ssh/id_rsa_terraform.pub -Raw
 $Secret = ConvertTo-SecureString -String $pubkey -AsPlainText -Force
 Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $sshkeysecret -SecretValue $Secret
+Set-AzKeyVaultSecret -VaultName AvivaKeyVault1 -Name "kvsshkey" -SecretValue $Secret
 
 #### Store SPN Client ID in Azure Key Vault
+$spnclientid = "a97ceb23-c863-45d0-9271-6114a525202b" # SPN Client ID (⚠️ Do not store in the Repo)
 $securestringid = ConvertTo-SecureString $spnclientId -AsPlainText -Force
-Set-AzKeyVaultSecret -VaultName AvivaRaja-kv1 -Name "spClientId" -SecretValue $securestring
+Set-AzKeyVaultSecret -VaultName AvivaKeyVault1 -Name "kvspClientId" -SecretValue $securestringid
 
-5) #### Store SPN Client Secret in Azure Key Vault
+#### Store SPN Client Secret in Azure Key Vault
+$spnclientsecret = "XXXXXXXXXXXX" # SPN Client Secret (⚠️ DO NOT store in plaintext in real scripts!)
 $securestring = ConvertTo-SecureString -String $spnclientsecret -AsPlainText -Force
-Set-AzKeyVaultSecret -VaultName $keyvaultname -Name $spnkvsecretname -SecretValue $securestring
+Set-AzKeyVaultSecret -VaultName AvivaKeyVault1 -Name "kvspSecret" -SecretValue $securestring
 
-6) #### Provide Key Vault secret access to SPN using Key Vault access policy
-Set-AzKeyVaultAccessPolicy -VaultName $keyvaultname -ObjectId $spnobjectID -PermissionsToSecrets get,set
+#### Provide Key Vault secret access to SPN using Key Vault access policy
+Set-AzKeyVaultAccessPolicy -VaultName AvivaKeyVault1 -ObjectId "5045307d-c41e-4a34-877f-3311c350afae" -PermissionsToSecrets get,set,delete,list
