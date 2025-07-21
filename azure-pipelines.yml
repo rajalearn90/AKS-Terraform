@@ -5,7 +5,8 @@
 
 trigger: none
 
-pool: 'Azure Pipelines'
+pool: 
+  name: Avivapool
 
 steps:
 - task: TerraformCLI@0
