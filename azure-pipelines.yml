@@ -9,6 +9,13 @@ pool:
   name: Avivapool
 
 steps:
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(d5109ab4-ace9-4590-b959-7f015acb7147)'
+    KeyVaultName: 'AvivaKeyVault1'
+    SecretsFilter: '*'
+    RunAsPreJob: false
+
 - task: TerraformCLI@0
   displayName: Terraform Init
   inputs:
