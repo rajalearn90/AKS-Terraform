@@ -1,10 +1,10 @@
 aks_vnet_name = "aksvnet"
 
-sshkvsecret = "sshkeysecret"
+sshkvsecret = "kvsshkey"
 
 clientidkvsecret = "spClientId"
 
-spnkvsecret = "spSecret"
+spnkvsecret = "kvspSecret"
 
 vnetcidr = ["10.0.0.0/24"]
 
@@ -12,7 +12,7 @@ subnetcidr = ["10.0.0.0/25"]
 
 keyvault_rg = "RG_AvivaProj1"
 
-keyvault_name = "AvivaRaja-kv1"
+keyvault_name = "AvivaRaja-kv"
 
 azure_region = "East US"
 
@@ -31,4 +31,4 @@ agent_pools = {
       count           = 2
       vm_size         = "Standard_D2_v2"
       os_disk_size_gb = "30"
-    }
+}
