@@ -32,17 +32,9 @@ steps:
 
 - task: TerraformCLI@0
   displayName: Terraform Plan
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+#  condition: eq(variables['Build.Reason'], 'PullRequest')
   inputs:
     command: 'plan'
     environmentServiceName: 'Azure subscription 1(d5109ab4-ace9-4590-b959-7f015acb7147)'
     allowTelemetryCollection: false
-
-- task: TerraformCLI@2
-  displayName: TerraformDestroy
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  inputs:
-    command: 'destroy'
-    environmentServiceName: 'Azure subscription 1(d5109ab4-ace9-4590-b959-7f015acb7147)'
-    allowTelemetryCollection: true
 
