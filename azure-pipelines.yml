@@ -38,10 +38,10 @@ steps:
     allowTelemetryCollection: false
 
 - task: TerraformCLI@2
-  displayName: TerraformApply
+  displayName: TerraformDestroy
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
-    command: 'apply'
+    command: 'destroy'
     environmentServiceName: 'Azure subscription 1(d5109ab4-ace9-4590-b959-7f015acb7147)'
     allowTelemetryCollection: true
 
