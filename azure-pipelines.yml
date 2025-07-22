@@ -6,14 +6,11 @@
 trigger:
   branches:
     include:
-      - feature-1
-      - feature-2
-
+      - main
 pr:
   branches:
     include:
-      - feature-1
-      - feature-2
+      - main
 
 pool: 
   name: Avivapool
